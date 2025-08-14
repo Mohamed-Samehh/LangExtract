@@ -2,62 +2,62 @@ import langextract as lx
 import os
 from typing import Dict, List
 
-class ArabicNERProcessor:
+class NERProcessor:
     def __init__(self):
-        """Initialize the Arabic NER processor with LangExtract (API key required)."""
+        """Initialize the NER processor with LangExtract (API key required)."""
         # Check if API key is available - required for operation
         self.api_key_available = bool(os.getenv('LANGEXTRACT_API_KEY'))
         
-        # Define Arabic entity extraction prompt
+        # Define entity extraction prompt
         self.prompt = """
-        Extract important entities from Arabic text in order of appearance.
+        Extract important entities from the text in order of appearance.
         Use exact text for extractions. Do not paraphrase or overlap entities.
-        Extract: names, dates, amounts/money, locations, organizations, phone numbers, emails, URLs.
+        Extract: names, dates, amounts/money, locations, organizations, phone numbers, emails, URLs, times.
         """
         
         # Define examples for few-shot learning
         self.examples = [
             lx.data.ExampleData(
-                text="محمد أحمد يعمل في شركة الاتصالات السعودية في الرياض، راتبه 5000 ريال شهرياً. هاتفه: 0501234567",
+                text="John Smith works at Microsoft Corporation in Seattle, earning $5000 monthly. His phone: 555-123-4567",
                 extractions=[
                     lx.data.Extraction(
                         extraction_class="name",
-                        extraction_text="محمد أحمد",
+                        extraction_text="John Smith",
                         attributes={"type": "person"}
                     ),
                     lx.data.Extraction(
                         extraction_class="organization",
-                        extraction_text="شركة الاتصالات السعودية",
+                        extraction_text="Microsoft Corporation",
                         attributes={"type": "company"}
                     ),
                     lx.data.Extraction(
                         extraction_class="location",
-                        extraction_text="الرياض",
+                        extraction_text="Seattle",
                         attributes={"type": "city"}
                     ),
                     lx.data.Extraction(
                         extraction_class="amount",
-                        extraction_text="5000 ريال",
-                        attributes={"currency": "SAR", "type": "salary"}
+                        extraction_text="$5000",
+                        attributes={"currency": "USD", "type": "salary"}
                     ),
                     lx.data.Extraction(
                         extraction_class="phone",
-                        extraction_text="0501234567",
+                        extraction_text="555-123-4567",
                         attributes={"type": "mobile"}
                     )
                 ]
             )
         ]
     
-    def clean_arabic_text(self, text: str) -> str:
-        """Clean and preprocess Arabic text for better extraction."""
+    def clean_text(self, text: str) -> str:
+        """Clean and preprocess text for better extraction."""
         if not text:
             return ""
         
         # Remove extra whitespace and normalize
         text = ' '.join(text.split())
         
-        # Remove common PDF artifacts
+        # Remove common artifacts
         unwanted_chars = ['\uf8ff', '\ufeff', '\u200b']
         for char in unwanted_chars:
             text = text.replace(char, ' ')
@@ -67,9 +67,9 @@ class ArabicNERProcessor:
 
     
     def process_document(self, text: str) -> Dict[str, List[str]]:
-        """Extract entities from Arabic text using LangExtract."""
+        """Extract entities from text using LangExtract."""
         try:
-            cleaned_text = self.clean_arabic_text(text)
+            cleaned_text = self.clean_text(text)
             
             if not cleaned_text:
                 return {
