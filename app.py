@@ -7,7 +7,7 @@ st.set_page_config(
     page_title="Text Entity Extractor", 
     page_icon="📄",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Custom CSS for better text display
@@ -18,6 +18,7 @@ st.markdown("""
     padding: 10px;
     border-radius: 5px;
     margin: 5px 0;
+    color: #262730;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -29,21 +30,6 @@ if 'ner_processor' not in st.session_state:
 # Main title
 st.title("📄 Text Entity Extractor")
 st.markdown("Extract important information from plain text")
-
-# Sidebar for options
-with st.sidebar:
-    st.header("⚙️ Information")
-    
-    st.markdown("**Extracted entities:**")
-    st.markdown("- 👤 Names")
-    st.markdown("- 📅 Dates")
-    st.markdown("- 💰 Amounts")
-    st.markdown("- 📍 Locations")
-    st.markdown("- 🏢 Organizations")
-    st.markdown("- 📞 Phone numbers")
-    st.markdown("- 📧 Email addresses")
-    st.markdown("- 🌐 URLs")
-    st.markdown("- 🕐 Times")
 
 # Main content area
 st.subheader("✍️ Enter Text")
@@ -132,14 +118,3 @@ if text_to_process and len(text_to_process.strip()) > 0:
 
 else:
     st.info("👆 Please enter text to start extracting entities.")
-
-# Footer
-st.markdown("---")
-st.markdown(
-    """
-    <div style='text-align: center; color: #666;'>
-    <p>Text Entity Extractor | Powered by LangExtract</p>
-    </div>
-    """, 
-    unsafe_allow_html=True
-)
