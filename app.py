@@ -65,7 +65,12 @@ if text_to_process and len(text_to_process.strip()) > 0:
                 'phones': '📞',
                 'emails': '📧',
                 'urls': '🌐',
-                'times': '🕐'
+                'times': '🕐',
+                'positions': '💼',
+                'id_numbers': '🆔',
+                'work_schedules': '⏰',
+                'notice_periods': '📋',
+                'governing_laws': '⚖️'
             }
             
             entity_labels = {
@@ -77,7 +82,12 @@ if text_to_process and len(text_to_process.strip()) > 0:
                 'phones': 'Phone Numbers',
                 'emails': 'Email Addresses',
                 'urls': 'URLs',
-                'times': 'Times'
+                'times': 'Times',
+                'positions': 'Job Positions',
+                'id_numbers': 'ID Numbers',
+                'work_schedules': 'Work Schedules',
+                'notice_periods': 'Notice Periods',
+                'governing_laws': 'Governing Laws'
             }
             
             # Display results in columns

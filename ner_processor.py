@@ -13,6 +13,7 @@ class NERProcessor:
         Extract important entities from the text in order of appearance.
         Use exact text for extractions. Do not paraphrase or overlap entities.
         Extract: names, dates, amounts/money, locations, organizations, phone numbers, emails, URLs, times.
+        For contracts, also extract: positions/job titles, ID numbers, work schedules, notice periods, governing laws.
         """
         
         # Define examples for few-shot learning
@@ -46,6 +47,56 @@ class NERProcessor:
                         attributes={"type": "mobile"}
                     )
                 ]
+            ),
+            lx.data.ExampleData(
+                text="Employment Agreement dated March 15, 2024, between ABC Corp and Sarah Johnson, ID 123456789, as Software Engineer starting April 1, 2024, salary $60,000 annually, 40 hours weekly, 30 days notice required.",
+                extractions=[
+                    lx.data.Extraction(
+                        extraction_class="date",
+                        extraction_text="March 15, 2024",
+                        attributes={"type": "agreement_date"}
+                    ),
+                    lx.data.Extraction(
+                        extraction_class="organization",
+                        extraction_text="ABC Corp",
+                        attributes={"type": "employer"}
+                    ),
+                    lx.data.Extraction(
+                        extraction_class="name",
+                        extraction_text="Sarah Johnson",
+                        attributes={"type": "employee"}
+                    ),
+                    lx.data.Extraction(
+                        extraction_class="id_number",
+                        extraction_text="123456789",
+                        attributes={"type": "employee_id"}
+                    ),
+                    lx.data.Extraction(
+                        extraction_class="position",
+                        extraction_text="Software Engineer",
+                        attributes={"type": "job_title"}
+                    ),
+                    lx.data.Extraction(
+                        extraction_class="date",
+                        extraction_text="April 1, 2024",
+                        attributes={"type": "start_date"}
+                    ),
+                    lx.data.Extraction(
+                        extraction_class="amount",
+                        extraction_text="$60,000",
+                        attributes={"currency": "USD", "type": "salary", "period": "annually"}
+                    ),
+                    lx.data.Extraction(
+                        extraction_class="work_schedule",
+                        extraction_text="40 hours weekly",
+                        attributes={"type": "working_hours"}
+                    ),
+                    lx.data.Extraction(
+                        extraction_class="notice_period",
+                        extraction_text="30 days",
+                        attributes={"type": "termination_notice"}
+                    )
+                ]
             )
         ]
     
@@ -75,7 +126,8 @@ class NERProcessor:
                 return {
                     'error': 'No text to process',
                     'names': [], 'dates': [], 'amounts': [], 'locations': [],
-                    'organizations': [], 'phones': [], 'emails': [], 'urls': [], 'times': []
+                    'organizations': [], 'phones': [], 'emails': [], 'urls': [], 'times': [],
+                    'positions': [], 'id_numbers': [], 'work_schedules': [], 'notice_periods': [], 'governing_laws': []
                 }
             
             # LangExtract is required - no fallback
@@ -83,7 +135,8 @@ class NERProcessor:
                 return {
                     'error': 'LangExtract API key is required for entity extraction. Please set LANGEXTRACT_API_KEY environment variable.',
                     'names': [], 'dates': [], 'amounts': [], 'locations': [],
-                    'organizations': [], 'phones': [], 'emails': [], 'urls': [], 'times': []
+                    'organizations': [], 'phones': [], 'emails': [], 'urls': [], 'times': [],
+                    'positions': [], 'id_numbers': [], 'work_schedules': [], 'notice_periods': [], 'governing_laws': []
                 }
             
             # Use LangExtract for entity extraction
@@ -97,7 +150,8 @@ class NERProcessor:
             # Convert LangExtract results to our format
             entities = {
                 'names': [], 'dates': [], 'amounts': [], 'locations': [],
-                'organizations': [], 'phones': [], 'emails': [], 'urls': [], 'times': []
+                'organizations': [], 'phones': [], 'emails': [], 'urls': [], 'times': [],
+                'positions': [], 'id_numbers': [], 'work_schedules': [], 'notice_periods': [], 'governing_laws': []
             }
             
             if hasattr(result, 'extractions'):
@@ -123,6 +177,16 @@ class NERProcessor:
                         entities['urls'].append(entity_text)
                     elif entity_class == 'time' and entity_text:
                         entities['times'].append(entity_text)
+                    elif entity_class == 'position' and entity_text:
+                        entities['positions'].append(entity_text)
+                    elif entity_class == 'id_number' and entity_text:
+                        entities['id_numbers'].append(entity_text)
+                    elif entity_class == 'work_schedule' and entity_text:
+                        entities['work_schedules'].append(entity_text)
+                    elif entity_class == 'notice_period' and entity_text:
+                        entities['notice_periods'].append(entity_text)
+                    elif entity_class == 'governing_law' and entity_text:
+                        entities['governing_laws'].append(entity_text)
             
             return entities
                 
@@ -130,5 +194,6 @@ class NERProcessor:
             return {
                 'error': f'LangExtract extraction failed: {str(e)}',
                 'names': [], 'dates': [], 'amounts': [], 'locations': [],
-                'organizations': [], 'phones': [], 'emails': [], 'urls': [], 'times': []
+                'organizations': [], 'phones': [], 'emails': [], 'urls': [], 'times': [],
+                'positions': [], 'id_numbers': [], 'work_schedules': [], 'notice_periods': [], 'governing_laws': []
             }
