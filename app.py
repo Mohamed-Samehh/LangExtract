@@ -5,7 +5,7 @@ from ner_processor import NERProcessor
 # Page configuration with better styling
 st.set_page_config(
     page_title="Text Entity Extractor", 
-    page_icon="�",
+    page_icon="📄",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -27,7 +27,7 @@ if 'ner_processor' not in st.session_state:
     st.session_state.ner_processor = NERProcessor()
 
 # Main title
-st.title("� Text Entity Extractor")
+st.title("📄 Text Entity Extractor")
 st.markdown("Extract important information from plain text")
 
 # Sidebar for options
