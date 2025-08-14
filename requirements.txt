@@ -1,0 +1,20 @@
+# Core web application framework
+streamlit>=1.28.0
+
+# Data manipulation and analysis
+pandas>=1.5.0
+
+# Language detection
+langdetect>=1.0.9
+
+# Natural Language Processing
+spacy>=3.6.0
+
+# Language extraction library
+langextract>=1.0.0
+
+# Standard library modules (included with Python)
+# re, datetime, typing, json, io are built-in modules
+
+# Optional: Arabic language model for spaCy (install separately)
+# To install Arabic model, run: python -m spacy download ar_core_news_sm
